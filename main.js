@@ -5,8 +5,18 @@ const databaseName = 'mongolab';
 const collectionName = 'products';
 
 console.log('About to connect to MongoDB');
-
-const generateData = (times) => {
+var showMe = (filter) => {
+    products.find().toArray((err, docs) => {
+        client.close();
+        console.log('Connection closed.');
+        if( err ) {
+            console.log('Could not use query find: ', err);
+            return;
+        }
+        console.log('The products are: ', docs);
+    })
+}
+var generateData = (times) => {
         let myArray = [];
         const n = ['trimmer', 'hair dryer', 'fridge', 'oven', 'smart tv', 'trendy computer',
     'posh sunglasses', 'poorly designed dining table', 'potatos 3kg', 'coca-cole x6 x1l'];
@@ -27,9 +37,19 @@ const generateData = (times) => {
         for (i=0; i<times; i++){
             createObject();
         }
-        
         return myArray
     }
+    var deleteData = (collection, filter) => {
+        collection.deleteOne(
+            filter,
+            (err, result) => {
+                // result är ett document med statusinformation
+                console.log(result);
+            }
+        );
+        showMe({});
+    }
+
 MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
 	if( err ) {
 		console.log('Could not connect! Error: ', err);
@@ -37,19 +57,8 @@ MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
 	}
 	const mongolab = client.db(databaseName);
 	console.log('We are connected to the forestdb');
-    const products = mongolab.collection(collectionName);
-    products.insertMany(generateData(10))
-
-	let filter = {};
-	products.find(filter).toArray((err, docs) => {
-		client.close();
-		console.log('Connection closed.');
-		if( err ) {
-			console.log('Could not use query find: ', err);
-			return;
-		}
-		console.log('The animals are: ', docs);
-    }) 
-    
+    const products = mongolab.collection(collectionName)
+    products.insertMany(generateData(15), showMeAll({}))
+    deleteData(products,{})
 })
 
