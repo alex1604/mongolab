@@ -92,8 +92,14 @@ MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
     1. db.querylab.count()
     2. db.querylab.createIndex({price: -1})
        db.querylab.aggregate([{$group: {_id: null,antal: { $sum: 1 },summa: {$sum: "$price"}}}])
-    3.
-    Sortera produkterna i första hand fallande efter pris, i andra hand 
-    i stigande bokstavsordning efter namn.
+    3. db.querylab.find().sort({price: -1, name: 1})
+    4. db.querylab.find().sort({name: 1}).limit(3)
+    5. db.querylab.aggregate([{$group: {_id: null, max: {$max: "$price"}, min: {$min: "$price"}, average: {$avg: "$price"}}}]) --> 134.0671
+    6. db.querylab.find({price: {$gt: 134.0671}}).count() --> 1548
+    7. db.querylab.aggregate([{$group: {_id: "$category", antal: { $sum: 1 }} }])
+    8. db.querylab.find({category: "furniture"}).sort({price: -1}).limit(5)
+    9. db.querylab.find().sort({name: 1}).skip(19).limit(1)
+   10. db.querylab.aggregate([ { $match : { category : "furniture" }}, {$group: {_id: null, total_value: {$sum: "$price" }}}]) --> 263565
+)
 */
 
