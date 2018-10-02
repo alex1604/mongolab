@@ -10,6 +10,11 @@ MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
         console.log('Could not connect! Error: ', err);
         return;
     }
+    var countAll = function (collection) {
+            collection.find({}).count((err, counter) => {
+                console.log('Inserted 10 000 items to querylab collection. Total amount: ', counter);
+            })
+    }
     var generateData = function (times) {
         let myArray = [];
         const n = ['trimmer', 'hair dryer', 'fridge', 'oven', 'smart tv', 'trendy computer',
@@ -38,6 +43,6 @@ MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
     console.log('We are connected to the mongolabdb');
     const querylab = mongolab.collection(querylabName);
     querylab.insertMany(generateData(10000), () => {
-        console.log('Inserted 10 000 items to querylab collection.')
-    });
+        countAll(querylab);
+    })
 })
