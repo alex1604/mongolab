@@ -15,6 +15,8 @@ MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
     console.log('We are connected to the mongolabdb');
     const querylab = mongolab.collection(querylabName);
     
-    querylab.dropIndex({category: 1});
+    //querylab.dropIndex({category: 1});
+    //querylab.dropIndex({price: -1})
+    //querylab.dropIndex({name: 1})
 })
 
